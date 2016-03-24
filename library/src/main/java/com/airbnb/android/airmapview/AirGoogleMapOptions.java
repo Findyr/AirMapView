@@ -11,9 +11,11 @@ import android.os.Bundle;
 public class AirGoogleMapOptions {
 
   private GoogleMapOptions options;
+  private boolean myLocationButtonEnabled;
 
   public AirGoogleMapOptions(GoogleMapOptions options) {
     this.options = options;
+    this.myLocationButtonEnabled = false;
   }
 
   public AirGoogleMapOptions zOrderOnTop(boolean zOrderOnTop) {
@@ -76,6 +78,11 @@ public class AirGoogleMapOptions {
     return this;
   }
 
+  public AirGoogleMapOptions myLocationButtonEnabled(boolean enabled) {
+    myLocationButtonEnabled = enabled;
+    return this;
+  }
+
   public Boolean getZOrderOnTop() {
     return options.getZOrderOnTop();
   }
@@ -124,10 +131,24 @@ public class AirGoogleMapOptions {
     return options.getMapToolbarEnabled();
   }
 
+  public Boolean getMyLocationButtonEnabled() {
+    return this.myLocationButtonEnabled;
+  }
+
   public Bundle toBundle() {
     Bundle args = new Bundle();
     // this is internal to SupportMapFragment
     args.putParcelable("MapOptions", options);
+    args.putBoolean("MyLocationButton", myLocationButtonEnabled);
     return args;
+  }
+
+  public static AirGoogleMapOptions fromBundle(Bundle args) {
+    if (args != null) {
+      GoogleMapOptions options = args.getParcelable("MapOptions");
+      boolean locationButtonEnabled = args.getBoolean("MyLocationButton", false);
+      return new AirGoogleMapOptions(options).myLocationButtonEnabled(locationButtonEnabled);
+    }
+    return null;
   }
 }

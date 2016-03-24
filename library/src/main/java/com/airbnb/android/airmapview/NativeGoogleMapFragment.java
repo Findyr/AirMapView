@@ -67,14 +67,20 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   public void init() {
+    final AirGoogleMapOptions options = AirGoogleMapOptions.fromBundle(getArguments());
     getMapAsync(new OnMapReadyCallback() {
       @Override
       public void onMapReady(GoogleMap googleMap) {
         if (googleMap != null && getActivity() != null) {
           NativeGoogleMapFragment.this.googleMap = googleMap;
           UiSettings settings = NativeGoogleMapFragment.this.googleMap.getUiSettings();
-          settings.setZoomControlsEnabled(false);
-          settings.setMyLocationButtonEnabled(false);
+          if (options != null) {
+            settings.setZoomControlsEnabled(options.getZoomControlsEnabled());
+            settings.setMyLocationButtonEnabled(options.getMyLocationButtonEnabled());
+          } else {
+            settings.setZoomControlsEnabled(false);
+            settings.setMyLocationButtonEnabled(false);
+          }
           setMyLocationEnabled(true);
 
           if (onMapLoadedListener != null) {
